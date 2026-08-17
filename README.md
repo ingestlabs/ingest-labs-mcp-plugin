@@ -1,10 +1,10 @@
 # Ingest Labs MCP Plugin
 
-Claude (and Cursor) plugin for **Ingest Labs Insights / IQC** against production MCP:
+**Ingest Labs MCP** for Claude and Cursor — connect to your production Ingest Labs account via:
 
 `https://mcp.ingestlabs.com/v1/mcp`
 
-Sign in with your Ingest Labs portal account (OAuth). The plugin registers the remote MCP server and a skill that maps natural-language analytics questions to Insights tools.
+Sign in with your Ingest Labs portal account (OAuth). The plugin registers the remote MCP server and skills for working with your Ingest Labs data and configuration. Today that includes Insights analytics and Tag Manager; more capabilities will follow.
 
 ## Install (Claude Code)
 
@@ -15,7 +15,7 @@ claude plugin install ingestlabs@ingestlabs
 
 Restart Claude Code and enable the plugin if prompted. Complete the portal login when OAuth starts. The MCP path is `/v1/mcp` (not `/mcp`).
 
-See [SETUP.md](SETUP.md) for the connect → login → `ping` → Insights walkthrough.
+See [SETUP.md](SETUP.md) for the connect → login → `ping` → first tools walkthrough.
 
 ## What you can ask
 

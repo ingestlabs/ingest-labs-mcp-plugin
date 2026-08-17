@@ -4,12 +4,12 @@ description: >-
   Answer IngestLabs Insights / analytics questions via the ingestlabs MCP
   tools against production (mcp.ingestlabs.com): list_vendors, list_projects,
   list_insights_contexts, get_insights_schema, execute_insights_query. Use for
-  production dashboards, reports, attribution, KPIs, IQC, IDL/CDP/media_tags metrics.
+  production dashboards, reports, attribution, KPIs, IDL/CDP/media_tags metrics.
 ---
 
 # IngestLabs Insights (MCP) — Prod
 
-Host LLM maps natural language → IQC ids. MCP only discovers schema and executes.
+Host LLM maps natural language → Insights schema ids (dimensions/metrics). MCP only discovers schema and executes.
 **Environment: production** (`https://mcp.ingestlabs.com`).
 
 ## Prerequisites
@@ -116,7 +116,7 @@ You may reuse a `context_id` and field ids already loaded in this session when t
 
 - Raw SQL / Thinkr nl2sql
 - Widget or dashboard CRUD
-- `internal` IQC contexts
+- `internal` Insights contexts
 - Site performance / Lighthouse contexts (no `site_performance` product on these tools yet)
 - Staging or local MCP environments (this plugin is production only)
 

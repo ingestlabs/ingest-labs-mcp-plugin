@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "ingestlabs",
-  "description": "Ingest Labs Claude plugin — Insights / IQC via production MCP",
+  "description": "Ingest Labs MCP — Claude plugin for production mcp.ingestlabs.com",
   "owner": {
     "name": "Ingest Labs",
     "url": "https://www.ingestlabs.com"
@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "ingestlabs",
-      "description": "Insights / IQC via ingestlabs MCP — production (mcp.ingestlabs.com)",
+      "description": "Ingest Labs MCP — analytics, tag management, and more (production / mcp.ingestlabs.com)",
       "author": {
         "name": "Ingest Labs"
       },

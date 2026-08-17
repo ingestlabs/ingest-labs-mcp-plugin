@@ -1,6 +1,6 @@
 # Setup — Ingest Labs MCP
 
-Use this when the plugin is installed but tools fail, OAuth is stuck, or Insights answers look empty.
+Use this when the plugin is installed but tools fail, OAuth is stuck, or answers look empty.
 
 ## 1. Confirm the MCP URL
 

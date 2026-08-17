@@ -1,7 +1,7 @@
 {
   "name": "ingestlabs",
   "displayName": "Ingest Labs",
-  "description": "Insights / IQC analytics via Ingest Labs MCP (production / mcp.ingestlabs.com)",
+  "description": "Ingest Labs MCP — analytics, tag management, and more (production / mcp.ingestlabs.com)",
   "version": "1.0.0",
   "author": {
     "name": "Ingest Labs"
@@ -9,10 +9,11 @@
   "logo": "https://www.ingestlabs.com/static/img/logo-small.png",
   "homepage": "https://www.ingestlabs.com",
   "keywords": [
-    "insights",
-    "iqc",
+    "ingest-labs",
     "mcp",
+    "insights",
     "analytics",
+    "tag-manager",
     "idl",
     "cdp",
     "attribution",
