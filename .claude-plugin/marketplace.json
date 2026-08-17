@@ -1,0 +1,22 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "ingestlabs",
+  "description": "Ingest Labs Claude plugin — Insights / IQC via production MCP",
+  "owner": {
+    "name": "Ingest Labs",
+    "url": "https://www.ingestlabs.com"
+  },
+  "plugins": [
+    {
+      "name": "ingestlabs",
+      "description": "Insights / IQC via ingestlabs MCP — production (mcp.ingestlabs.com)",
+      "author": {
+        "name": "Ingest Labs"
+      },
+      "source": "./",
+      "category": "productivity",
+      "homepage": "https://www.ingestlabs.com",
+      "license": "MIT"
+    }
+  ]
+}

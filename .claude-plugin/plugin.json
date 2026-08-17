@@ -1,0 +1,23 @@
+{
+  "name": "ingestlabs",
+  "version": "1.0.0",
+  "description": "Insights / IQC analytics via Ingest Labs MCP (production / mcp.ingestlabs.com)",
+  "author": {
+    "name": "Ingest Labs"
+  },
+  "homepage": "https://www.ingestlabs.com",
+  "repository": "https://github.com/ingestlabs/ingest-labs-mcp-plugin",
+  "license": "MIT",
+  "keywords": [
+    "insights",
+    "iqc",
+    "mcp",
+    "analytics",
+    "idl",
+    "cdp",
+    "attribution",
+    "production"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json"
+}

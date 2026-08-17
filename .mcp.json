@@ -1,0 +1,17 @@
+{
+  "ingestlabs": {
+    "type": "http",
+    "url": "https://mcp.ingestlabs.com/v1/mcp",
+    "auth": {
+      "CLIENT_ID": "c339sovp71ct1so3un1ko0thp",
+      "scopes": [
+        "openid",
+        "profile",
+        "email"
+      ]
+    },
+    "oauth": {
+      "clientId": "c339sovp71ct1so3un1ko0thp"
+    }
+  }
+}

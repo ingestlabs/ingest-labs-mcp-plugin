@@ -1,0 +1,22 @@
+{
+  "name": "ingestlabs",
+  "displayName": "Ingest Labs",
+  "description": "Insights / IQC analytics via Ingest Labs MCP (production / mcp.ingestlabs.com)",
+  "version": "1.0.0",
+  "author": {
+    "name": "Ingest Labs"
+  },
+  "logo": "https://www.ingestlabs.com/static/img/logo-small.png",
+  "homepage": "https://www.ingestlabs.com",
+  "keywords": [
+    "insights",
+    "iqc",
+    "mcp",
+    "analytics",
+    "idl",
+    "cdp",
+    "attribution",
+    "production"
+  ],
+  "skills": "./skills/"
+}
