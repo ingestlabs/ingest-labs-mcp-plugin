@@ -1,21 +1,41 @@
-# Ingest Labs MCP Plugin
+# Ingest Labs MCP
 
-**Ingest Labs MCP** for Claude and Cursor — connect to your production Ingest Labs account via:
+Remote MCP for your **production** Ingest Labs account:
 
-`https://mcp.ingestlabs.com/v1/mcp`
+```text
+https://mcp.ingestlabs.com/v1/mcp
+```
 
-Sign in with your Ingest Labs portal account (OAuth). The plugin registers the remote MCP server and skills for working with your Ingest Labs data and configuration. Today that includes Insights analytics and Tag Manager; more capabilities will follow.
+Use Streamable HTTP. The path must be `/v1/mcp` (not `/mcp` or `/v1`). Sign in with your Ingest Labs portal account when the client starts OAuth.
 
-## Install (Claude Code)
+Works with any MCP-capable host that can reach a remote HTTPS MCP server (for example ChatGPT, Claude, Cursor, Perplexity, and others). This repository also packages optional client plugins/skills for hosts that install from GitHub.
+
+Today the server exposes Insights analytics and Tag Manager tools; more capabilities will follow.
+
+## Connect (any MCP client)
+
+1. Add a remote MCP server with URL `https://mcp.ingestlabs.com/v1/mcp`.
+2. Complete the browser login (same account as [console.ingestlabs.com](https://console.ingestlabs.com)).
+3. Confirm with `ping`, then `list_vendors`.
+
+Details and troubleshooting: [SETUP.md](SETUP.md).
+
+### Claude Code (optional plugin package)
 
 ```bash
 claude plugin marketplace add ingestlabs/ingest-labs-mcp-plugin
 claude plugin install ingestlabs@ingestlabs
 ```
 
-Restart Claude Code and enable the plugin if prompted. Complete the portal login when OAuth starts. The MCP path is `/v1/mcp` (not `/mcp`).
+Restart Claude Code, enable the plugin if prompted, then complete portal OAuth.
 
-See [SETUP.md](SETUP.md) for the connect → login → `ping` → first tools walkthrough.
+### Cursor (optional)
+
+Install this repo as a local Cursor plugin, or add the same MCP URL under Cursor MCP settings (see `.mcp.json` in this repo for the expected shape, including the public OAuth client id).
+
+### Other hosts (ChatGPT, Claude.ai connectors, Perplexity, …)
+
+Use that product’s “custom MCP / connector” UI and paste `https://mcp.ingestlabs.com/v1/mcp`. Follow its OAuth prompts to the Ingest Labs portal. No Claude Code install is required.
 
 ## What you can ask
 

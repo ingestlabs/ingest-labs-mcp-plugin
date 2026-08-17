@@ -24,7 +24,7 @@ Host LLM maps natural language → Insights schema ids (dimensions/metrics). MCP
 }
 ```
 
-3. Complete OAuth (portal login) when Cursor or Claude Code prompts. Endpoint is `/v1/mcp` (not `/mcp`).
+3. Complete OAuth (portal login) when your MCP client prompts. Endpoint is `/v1/mcp` (not `/mcp`).
 
 If the server is connected but tools fail, follow [SETUP.md](../../SETUP.md).
 

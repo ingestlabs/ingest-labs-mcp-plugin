@@ -1,10 +1,16 @@
 # Setup — Ingest Labs MCP
 
-Use this when the plugin is installed but tools fail, OAuth is stuck, or answers look empty.
+Use this when connecting a client, OAuth is stuck, or tools return empty/errors.
 
 ## 1. Confirm the MCP URL
 
 Production only:
+
+```text
+https://mcp.ingestlabs.com/v1/mcp
+```
+
+Example config shape (field names vary by client):
 
 ```json
 {
@@ -15,16 +21,16 @@ Production only:
 }
 ```
 
-The path must be `/v1/mcp`. A URL that ends at `/v1` fails resource-identifier checks.
+The path must be `/v1/mcp`. A URL that ends at `/v1` fails protected-resource checks.
 
 ## 2. Sign in (OAuth)
 
-When Claude or Cursor prompts for authentication:
+When your AI client prompts for authentication:
 
 1. Open the browser login (Ingest Labs portal).
 2. Sign in with the same account you use on [console.ingestlabs.com](https://console.ingestlabs.com).
 3. Return to the client and wait for the token exchange to finish.
-4. Do not run `mcp_auth` repeatedly if login already failed — check portal access and retry once.
+4. Do not retry auth in a loop if login already failed — check portal access and try once more.
 
 You need an Ingest Labs organization the account is allowed to see. Ask your admin if `list_vendors` returns nothing.
 
