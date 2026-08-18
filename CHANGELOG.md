@@ -2,6 +2,14 @@
 
 All notable changes to this plugin are documented in this file. Version numbers match `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json`.
 
+## 1.0.3
+
+Bundle a Codex-native MCP server so install does not require a manual `config.toml` entry.
+
+- Add `.codex-plugin/mcp.json` with Streamable HTTP `url` + `auth: oauth` (Codex ignores Claude's `type`/`oauth.clientId` shape in root `.mcp.json`)
+- Point `.codex-plugin/plugin.json` `mcpServers` at that file
+- Root `.mcp.json` unchanged for Claude Code / Cursor
+
 ## 1.0.2
 
 Ship the Ingest Labs logo as a bundled Codex/ChatGPT asset.

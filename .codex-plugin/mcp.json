@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "ingestlabs": {
+      "url": "https://mcp.ingestlabs.com/v1/mcp",
+      "auth": "oauth"
+    }
+  }
+}

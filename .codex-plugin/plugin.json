@@ -1,6 +1,6 @@
 {
   "name": "ingestlabs",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Ingest Labs MCP — analytics, tag management, and more (production / mcp.ingestlabs.com)",
   "author": {
     "name": "Ingest Labs",
@@ -22,7 +22,7 @@
     "production"
   ],
   "skills": "./skills/",
-  "mcpServers": "./.mcp.json",
+  "mcpServers": "./.codex-plugin/mcp.json",
   "interface": {
     "displayName": "Ingest Labs",
     "shortDescription": "Analytics & tag manager MCP",

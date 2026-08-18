@@ -39,7 +39,9 @@ Codex / ChatGPT desktop (GitHub marketplace):
 codex plugin marketplace add ingestlabs/ingest-labs-mcp-plugin
 ```
 
-Then install **ingestlabs**, complete portal OAuth, and confirm with `ping`.
+Then install **ingestlabs**. Codex should attach the bundled server at `https://mcp.ingestlabs.com/v1/mcp`. Complete portal OAuth when prompted (`codex mcp login ingestlabs` if it does not open automatically), then confirm with `ping`.
+
+If you previously added a **manual** `[mcp_servers.ingestlabs]` in `~/.codex/config.toml`, remove that block after upgrading to 1.0.3 so you are not running two copies of the same server.
 
 You can also paste the MCP URL into ChatGPT’s custom MCP / connector UI (Developer mode) without installing this GitHub package.
 
