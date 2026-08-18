@@ -2,6 +2,13 @@
 
 All notable changes to this plugin are documented in this file. Version numbers match `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json`.
 
+## 1.0.2
+
+Ship the Ingest Labs logo as a bundled Codex/ChatGPT asset.
+
+- `assets/logo.png` (400×400 PNG)
+- `.codex-plugin/plugin.json` `interface.logo` and `composerIcon` point at `./assets/logo.png`
+
 ## 1.0.1
 
 ChatGPT / Codex plugin packaging (same prod MCP and Insights skill).

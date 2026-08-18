@@ -1,6 +1,6 @@
 {
   "name": "ingestlabs",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Ingest Labs MCP — analytics, tag management, and more (production / mcp.ingestlabs.com)",
   "author": {
     "name": "Ingest Labs",
@@ -37,6 +37,8 @@
     "websiteURL": "https://www.ingestlabs.com",
     "privacyPolicyURL": "https://ingestlabs.com/privacy-policy/",
     "termsOfServiceURL": "https://ingestlabs.com/terms-of-service/",
+    "logo": "./assets/logo.png",
+    "composerIcon": "./assets/logo.png",
     "defaultPrompt": [
       "Show last 7 days of attributed revenue by channel for my org.",
       "Compare Meta vs Google Ads ROAS for the last 30 days.",
