@@ -57,7 +57,11 @@ The MCP server reads Ingest Labs data for the signed-in user. It does not train 
 
 ## Support
 
-[ingestlabs.com](https://www.ingestlabs.com)
+[ingestlabs.com](https://www.ingestlabs.com) · [privacy@ingestlabs.com](mailto:privacy@ingestlabs.com)
+
+## Changelog
+
+[CHANGELOG.md](CHANGELOG.md)
 
 ## License
 
