@@ -4,18 +4,18 @@
   "description": "Ingest Labs MCP — production remote MCP (mcp.ingestlabs.com)",
   "owner": {
     "name": "Ingest Labs",
-    "email": "privacy@ingestlabs.com",
+    "email": "support@ingestlabs.com",
     "url": "https://www.ingestlabs.com"
   },
   "plugins": [
     {
       "name": "ingestlabs",
       "displayName": "Ingest Labs",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "Ingest Labs MCP — analytics, tag management, and more (production / mcp.ingestlabs.com)",
       "author": {
         "name": "Ingest Labs",
-        "email": "privacy@ingestlabs.com",
+        "email": "support@ingestlabs.com",
         "url": "https://www.ingestlabs.com"
       },
       "source": "./",

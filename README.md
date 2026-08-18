@@ -29,13 +29,27 @@ claude plugin install ingestlabs@ingestlabs
 
 Restart Claude Code, enable the plugin if prompted, then complete portal OAuth.
 
+### ChatGPT / Codex (optional plugin package)
+
+This repo is the ChatGPT and Codex plugin package (skills + remote MCP). Directory listing is submitted in the OpenAI plugin portal as **With MCP** (`https://mcp.ingestlabs.com/v1/mcp`); the skill bundle is `skills/ingestlabs`.
+
+Codex / ChatGPT desktop (GitHub marketplace):
+
+```bash
+codex plugin marketplace add ingestlabs/ingest-labs-mcp-plugin
+```
+
+Then install **ingestlabs**, complete portal OAuth, and confirm with `ping`.
+
+You can also paste the MCP URL into ChatGPT’s custom MCP / connector UI (Developer mode) without installing this GitHub package.
+
 ### Cursor (optional)
 
 Install this repo as a local Cursor plugin, or add the same MCP URL under Cursor MCP settings (see `.mcp.json` in this repo for the expected shape, including the public OAuth client id).
 
-### Other hosts (ChatGPT, Claude.ai connectors, Perplexity, …)
+### Other hosts (Claude.ai connectors, Perplexity, …)
 
-Use that product’s “custom MCP / connector” UI and paste `https://mcp.ingestlabs.com/v1/mcp`. Follow its OAuth prompts to the Ingest Labs portal. No Claude Code install is required.
+Use that product’s “custom MCP / connector” UI and paste `https://mcp.ingestlabs.com/v1/mcp`. Follow its OAuth prompts to the Ingest Labs portal. No Claude Code or Codex install is required.
 
 ## What you can ask
 
@@ -57,7 +71,7 @@ The MCP server reads Ingest Labs data for the signed-in user. It does not train 
 
 ## Support
 
-[ingestlabs.com](https://www.ingestlabs.com) · [privacy@ingestlabs.com](mailto:privacy@ingestlabs.com)
+[ingestlabs.com](https://www.ingestlabs.com) · [support@ingestlabs.com](mailto:support@ingestlabs.com)
 
 ## Changelog
 

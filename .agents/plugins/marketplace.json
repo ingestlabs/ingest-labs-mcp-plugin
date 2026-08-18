@@ -1,0 +1,21 @@
+{
+  "name": "ingestlabs",
+  "interface": {
+    "displayName": "Ingest Labs"
+  },
+  "plugins": [
+    {
+      "name": "ingestlabs",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/ingestlabs/ingest-labs-mcp-plugin.git",
+        "ref": "main"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

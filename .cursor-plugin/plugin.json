@@ -2,10 +2,10 @@
   "name": "ingestlabs",
   "displayName": "Ingest Labs",
   "description": "Ingest Labs MCP — analytics, tag management, and more (production / mcp.ingestlabs.com)",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "Ingest Labs",
-    "email": "privacy@ingestlabs.com",
+    "email": "support@ingestlabs.com",
     "url": "https://www.ingestlabs.com"
   },
   "logo": "https://www.ingestlabs.com/static/img/logo-small.png",

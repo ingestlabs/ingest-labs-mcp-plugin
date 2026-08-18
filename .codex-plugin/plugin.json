@@ -1,0 +1,46 @@
+{
+  "name": "ingestlabs",
+  "version": "1.0.1",
+  "description": "Ingest Labs MCP — analytics, tag management, and more (production / mcp.ingestlabs.com)",
+  "author": {
+    "name": "Ingest Labs",
+    "email": "support@ingestlabs.com",
+    "url": "https://www.ingestlabs.com"
+  },
+  "homepage": "https://www.ingestlabs.com",
+  "repository": "https://github.com/ingestlabs/ingest-labs-mcp-plugin",
+  "license": "MIT",
+  "keywords": [
+    "ingest-labs",
+    "mcp",
+    "insights",
+    "analytics",
+    "tag-manager",
+    "idl",
+    "cdp",
+    "attribution",
+    "production"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Ingest Labs",
+    "shortDescription": "Analytics & tag manager MCP",
+    "longDescription": "Connect ChatGPT and Codex to your production Ingest Labs account over Streamable HTTP MCP at https://mcp.ingestlabs.com/v1/mcp. Sign in with the same portal account used on console.ingestlabs.com. Use Insights tools for attribution, ads, GA4, sessionized events, and traffic quality, and Tag Manager tools for providers, tags, and data elements. Always resolve vendor_id (and project_id for tags) before querying. No Apps SDK UI in this package.",
+    "developerName": "Ingest Labs",
+    "category": "Productivity",
+    "capabilities": [
+      "Query attribution and channel revenue",
+      "Inspect Meta and Google Ads spend and ROAS",
+      "Look up Tag Manager providers and tags"
+    ],
+    "websiteURL": "https://www.ingestlabs.com",
+    "privacyPolicyURL": "https://ingestlabs.com/privacy-policy/",
+    "termsOfServiceURL": "https://ingestlabs.com/terms-of-service/",
+    "defaultPrompt": [
+      "Show last 7 days of attributed revenue by channel for my org.",
+      "Compare Meta vs Google Ads ROAS for the last 30 days.",
+      "List tags in my project and which ones recorded events yesterday."
+    ]
+  }
+}
