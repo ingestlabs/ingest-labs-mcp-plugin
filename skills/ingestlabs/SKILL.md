@@ -3,8 +3,10 @@ name: ingestlabs
 description: >-
   Answer IngestLabs Insights / analytics questions via the ingestlabs MCP
   tools against production (mcp.ingestlabs.com): list_vendors, list_projects,
-  list_insights_contexts, get_insights_schema, execute_insights_query. Use for
-  production dashboards, reports, attribution, KPIs, IDL/CDP/media_tags metrics.
+  list_insights_contexts, get_insights_schema, execute_insights_query,
+  create_mdp_ai_report_from_insights. Use for production dashboards, reports,
+  attribution, KPIs, IDL/CDP/media_tags metrics, and saving Insights queries as
+  MDP AI reports.
 ---
 
 # IngestLabs Insights (MCP) — Prod
@@ -100,6 +102,54 @@ You may reuse a `context_id` and field ids already loaded in this session when t
 - Prefer a small `limit` for exploration (e.g. 10–25); max 100. Prefer metric-only queries when the user wants one number. If `truncated: true`, say so and offer a tighter filter or higher limit.
 - Need at least one dimension or metric.
 
+## Save as MDP AI Report
+
+After a successful **`execute_insights_query`**, the user may ask to save the query as a durable MDP AI report. Call **`create_mdp_ai_report_from_insights`** only when:
+
+1. Scope is resolved (`vendor_id`, and `project_id` when `product` is `media_tags`).
+2. You have already run **`execute_insights_query`** in this conversation and shown results.
+3. The user **explicitly confirms** they want to save (name, audience flag, optional description/timing).
+
+### Save workflow
+
+1. Confirm with the user: report **name**, whether it **can be used as an audience** (`can_be_audience`), optional **description**, optional **start_timing** / **end_timing** for default run windows.
+2. Reuse the **same** `vendor_id`, `product`, `project_id` (if any), `context_id`, `dimensions`, `metrics`, `filters`, `sort`, and `interval_suffix` as the last successful execute — **not** `date_preset`, `from`/`to`, or `limit` (those are execution-only).
+3. Call **`create_mdp_ai_report_from_insights`**.
+4. Return `report_id`, `name`, and `creation_source: 'MCP'`. Tell the user they can open the report in the portal under MDP Reports.
+
+Do not call save before execute. Do not invent field ids — reuse ids from the prior execute (via schema). Do not save without user confirmation.
+
+### Tool parameters
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `vendor_id` | Yes | Confirmed org id |
+| `product` | Yes | `idl` \| `cdp` \| `media_tags` |
+| `project_id` | When `media_tags` | Same as execute |
+| `context_id` | Yes | Same as execute |
+| `name` | Yes | Report display name |
+| `can_be_audience` | Yes | Boolean — ask the user |
+| `description` | No | Optional |
+| `dimensions` | No* | Same ids as execute |
+| `metrics` | No* | Same ids + optional `aggregate_fn` as execute |
+| `filters` | No | Same as execute (baked into compiled SQL) |
+| `sort` | No | Same as execute |
+| `interval_suffix` | When date dim | `m` \| `h` \| `d` \| `w` — same as execute |
+| `start_timing` | No | Optional relative window start (`qty`, `unit`, `reset`) |
+| `end_timing` | No | Optional relative window end (`qty`, `unit`, `reset`) |
+
+\*At least one dimension or metric (same rule as execute).
+
+**Not accepted:** `from`, `to`, `date_preset`, `limit`. Saved reports use relative `start_timing` / `end_timing` (when set) for portal runs, not the exploration date range.
+
+### Portal behavior (MCP-created reports)
+
+Reports saved via MCP have `creation_source: 'MCP'`. In the portal MDP Reports UI they support **view, run, export, delivery, and metadata/timing configuration** only:
+
+- **Read-only query definition** — dimensions, metrics, filters, and sort are shown but not editable in v1 (no Thinkr chat panel).
+- **Metadata edits** — name, description, audience flag, and timing can be updated; query definition and SQL are not changed via the portal.
+- To change the query later, create a **new** report from MCP (v2 portal editor / MCP update tool deferred).
+
 ## Answering
 
 - Lead with the number/table the user asked for.
@@ -115,6 +165,7 @@ You may reuse a `context_id` and field ids already loaded in this session when t
 ## Out of scope
 
 - Raw SQL / Thinkr nl2sql
+- Editing saved MCP report query definitions in the portal (read-only in v1)
 - Widget or dashboard CRUD
 - `internal` Insights contexts
 - Site performance / Lighthouse contexts (no `site_performance` product on these tools yet)
