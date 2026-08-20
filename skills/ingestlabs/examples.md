@@ -97,3 +97,34 @@ Do **not** also set `date_preset`. For ads without platform named, ask Meta vs G
 
 **Bad:** run Insights tools before org is known.  
 **Good:** `list_vendors` → confirm org → Insights workflow.
+
+## Example 5 — Save execute query as MDP AI report
+
+**User:** “Save this as a report called ‘Weekly channel revenue’.” (after you ran attribution revenue by channel for `last_7d` and they saw the table)
+
+**Bad:** Call `create_mdp_ai_report_from_insights` immediately without confirmation, or pass `date_preset` / `limit` from the explore query.
+
+**Good:**
+
+1. Confirm: name **Weekly channel revenue**, `can_be_audience` (ask yes/no), optional description.
+2. Reuse the same field ids from the prior successful `execute_insights_query` (example from Example 1):
+
+```json
+{
+  "vendor_id": "VENDOR_ID",
+  "product": "idl",
+  "context_id": "<chosen>",
+  "name": "Weekly channel revenue",
+  "can_be_audience": false,
+  "description": "Revenue by attribution channel",
+  "dimensions": ["<channel_dim_id>"],
+  "metrics": [{ "id": "<revenue_metric_id>" }],
+  "sort": [{ "field": "<revenue_metric_id>", "dir": "desc" }],
+  "start_timing": { "qty": 7, "unit": "DAY", "reset": "START_OF_DAY" },
+  "end_timing": { "qty": 1, "unit": "DAY", "reset": "END_OF_DAY" }
+}
+```
+
+3. Tool returns `{ "report_id": "RPT-...", "name": "Weekly channel revenue", "creation_source": "MCP" }`.
+
+**Answer:** Give the report id and name; note it is saved in **production** and can be opened in the portal MDP Reports list. Query definition is **read-only** there (view/run/configure metadata and timing only; no Thinkr chat to change fields).
