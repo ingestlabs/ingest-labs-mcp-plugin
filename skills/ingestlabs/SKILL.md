@@ -4,9 +4,10 @@ description: >-
   Answer IngestLabs Insights / analytics questions via the ingestlabs MCP
   tools against production (mcp.ingestlabs.com): list_vendors, list_projects,
   list_insights_contexts, get_insights_schema, execute_insights_query,
-  create_mdp_ai_report_from_insights. Use for production dashboards, reports,
-  attribution, KPIs, IDL/CDP/media_tags metrics, and saving Insights queries as
-  MDP AI reports.
+  create_mdp_ai_report_from_insights, list_mdp_ai_reports, get_mdp_ai_report,
+  execute_mdp_ai_report, update_mdp_ai_report_from_insights. Use for production
+  dashboards, reports, attribution, KPIs, IDL/CDP/media_tags metrics, and MDP AI
+  report lifecycle.
 ---
 
 # IngestLabs Insights (MCP) — Prod
@@ -108,11 +109,11 @@ After a successful **`execute_insights_query`**, the user may ask to save the qu
 
 1. Scope is resolved (`vendor_id`, and `project_id` when `product` is `media_tags`).
 2. You have already run **`execute_insights_query`** in this conversation and shown results.
-3. The user **explicitly confirms** they want to save (name, audience flag, optional description/timing).
+3. The user **explicitly confirms** they want to save (report **name**; optional description/timing).
 
 ### Save workflow
 
-1. Confirm with the user: report **name**, whether it **can be used as an audience** (`can_be_audience`), optional **description**, optional **start_timing** / **end_timing** for default run windows.
+1. Confirm with the user: report **name**, optional **description**, optional **start_timing** / **end_timing** for default run windows. Do **not** ask about `can_be_audience` — default it to `false` (omit the field, or pass `false`). Only set `true` if the user explicitly asks for audience eligibility.
 2. Reuse the **same** `vendor_id`, `product`, `project_id` (if any), `context_id`, `dimensions`, `metrics`, `filters`, `sort`, and `interval_suffix` as the last successful execute — **not** `date_preset`, `from`/`to`, or `limit` (those are execution-only).
 3. Call **`create_mdp_ai_report_from_insights`**.
 4. Return `report_id`, `name`, and `creation_source: 'MCP'`. Tell the user they can open the report in the portal under MDP Reports.
@@ -128,7 +129,7 @@ Do not call save before execute. Do not invent field ids — reuse ids from the 
 | `project_id` | When `media_tags` | Same as execute |
 | `context_id` | Yes | Same as execute |
 | `name` | Yes | Report display name |
-| `can_be_audience` | Yes | Boolean — ask the user |
+| `can_be_audience` | No | Default `false`. Do **not** ask — only set `true` if the user explicitly requests audience use |
 | `description` | No | Optional |
 | `dimensions` | No* | Same ids as execute |
 | `metrics` | No* | Same ids + optional `aggregate_fn` as execute |
@@ -142,13 +143,32 @@ Do not call save before execute. Do not invent field ids — reuse ids from the 
 
 **Not accepted:** `from`, `to`, `date_preset`, `limit`. Saved reports use relative `start_timing` / `end_timing` (when set) for portal runs, not the exploration date range.
 
+## Manage MDP AI Reports
+
+After reports exist, use these tools (same vendor scope rules as Insights):
+
+| Tool | When |
+| --- | --- |
+| `list_mdp_ai_reports` | Discover reports. **Required** `scope`: `CUSTOM` or `PREBUILT`. For AI-saved reports prefer `scope=CUSTOM` + `creation_source=MCP`. Optional `search`, `offset`, `limit` (max 100). |
+| `get_mdp_ai_report` | Inspect metadata, `idl_query_request` (with context name/description), timings, column map. SQL omitted unless `include_sql: true` (debugging only). |
+| `execute_mdp_ai_report` | Run saved SQL for a date range. Same date rules as Insights: `date_preset` **or** both `from`+`to`. Default `limit` 25, max 100. Does not change the stored definition. |
+| `update_mdp_ai_report_from_insights` | Recompile an **MCP** report’s query from a new Insights shape. Same confirm + prior successful `execute_insights_query` rules as create. Only `creation_source=MCP` reports. |
+
+### Update workflow
+
+1. User confirms they want to change an existing MCP report (and which `report_id`).
+2. Run **`execute_insights_query`** with the new fields and show results.
+3. Call **`update_mdp_ai_report_from_insights`** with the same field ids (no dates/limit) plus `report_id`.
+4. Return `report_id`, optional new `name`, `creation_source: 'MCP'`.
+
+Do not update AI_CHAT / Thinkr reports via this tool. Do not pass client SQL.
+
 ### Portal behavior (MCP-created reports)
 
-Reports saved via MCP have `creation_source: 'MCP'`. In the portal MDP Reports UI they support **view, run, export, delivery, and metadata/timing configuration** only:
+Reports saved via MCP have `creation_source: 'MCP'`. In the portal MDP Reports UI they support **view, run, export, delivery, and metadata/timing configuration**:
 
-- **Read-only query definition** — dimensions, metrics, filters, and sort are shown but not editable in v1 (no Thinkr chat panel).
-- **Metadata edits** — name, description, audience flag, and timing can be updated; query definition and SQL are not changed via the portal.
-- To change the query later, create a **new** report from MCP (v2 portal editor / MCP update tool deferred).
+- **Read-only query definition** in the portal — use **`update_mdp_ai_report_from_insights`** to change fields via MCP.
+- **Metadata edits** — name, description, audience flag, and timing can also be updated in the portal without changing SQL.
 
 ## Answering
 
@@ -165,7 +185,7 @@ Reports saved via MCP have `creation_source: 'MCP'`. In the portal MDP Reports U
 ## Out of scope
 
 - Raw SQL / Thinkr nl2sql
-- Editing saved MCP report query definitions in the portal (read-only in v1)
+- Editing AI_CHAT report queries via MCP (Thinkr/portal owns those)
 - Widget or dashboard CRUD
 - `internal` Insights contexts
 - Site performance / Lighthouse contexts (no `site_performance` product on these tools yet)

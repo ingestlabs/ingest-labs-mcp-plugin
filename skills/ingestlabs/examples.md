@@ -106,7 +106,7 @@ Do **not** also set `date_preset`. For ads without platform named, ask Meta vs G
 
 **Good:**
 
-1. Confirm: name **Weekly channel revenue**, `can_be_audience` (ask yes/no), optional description.
+1. Confirm: name **Weekly channel revenue**, optional description. Do **not** ask about audience eligibility.
 2. Reuse the same field ids from the prior successful `execute_insights_query` (example from Example 1):
 
 ```json
@@ -127,4 +127,28 @@ Do **not** also set `date_preset`. For ads without platform named, ask Meta vs G
 
 3. Tool returns `{ "report_id": "RPT-...", "name": "Weekly channel revenue", "creation_source": "MCP" }`.
 
-**Answer:** Give the report id and name; note it is saved in **production** and can be opened in the portal MDP Reports list. Query definition is **read-only** there (view/run/configure metadata and timing only; no Thinkr chat to change fields).
+**Answer:** Give the report id and name; note it is saved in **production** and can be opened in the portal MDP Reports list. Query definition is read-only in the portal — use `update_mdp_ai_report_from_insights` to change fields later.
+
+## Example 6 — List, get, and execute an MCP report
+
+**User:** “What MCP reports do I have, and run Weekly channel revenue for last 7 days?”
+
+**Good:**
+
+1. `list_mdp_ai_reports` with `scope: "CUSTOM"`, `creation_source: "MCP"`.
+2. Match the report by name → take `report_id`.
+3. Optional `get_mdp_ai_report` if you need the stored IQC definition (omit `include_sql` unless debugging).
+4. `execute_mdp_ai_report` with `date_preset: "last_7d"` (or `from`+`to`), optional `limit`.
+
+**Bad:** Pass `scope` omitted, or mix `date_preset` with `from`/`to`.
+
+## Example 7 — Update an MCP report query
+
+**User:** “Change Weekly channel revenue to also filter paid only.” (report already exists as MCP)
+
+**Good:**
+
+1. Confirm `report_id` (from list/get).
+2. `execute_insights_query` with the new filters; show results.
+3. User confirms update.
+4. `update_mdp_ai_report_from_insights` with same Insights fields + `report_id` (no dates/limit).
