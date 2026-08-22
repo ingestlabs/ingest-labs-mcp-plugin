@@ -127,7 +127,12 @@ Do **not** also set `date_preset`. For ads without platform named, ask Meta vs G
 
 3. Tool returns `{ "report_id": "RPT-...", "name": "Weekly channel revenue", "creation_source": "MCP", "portal_url": "https://…/admin/vendor/…/idl/ai-reports?reportId=RPT-..." }`.
 
-**Answer:** Give the report id, name, and the **portal_url** link so the user can open it directly. Note it is saved in **production**. Query definition is read-only in the portal — use `update_mdp_ai_report_from_insights` to change fields later.
+**Answer (chat display):** Created **Weekly channel revenue** (production). Then only:
+
+- **Report ID:** `RPT-...`
+- **Report URL:** [open link](portal_url)
+
+Do **not** show `creation_source`. Query definition is read-only in the portal — use `update_mdp_ai_report_from_insights` to change fields later.
 
 ## Example 6 — List, get, and execute an MCP report
 
