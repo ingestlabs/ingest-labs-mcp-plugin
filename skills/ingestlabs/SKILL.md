@@ -116,7 +116,7 @@ After a successful **`execute_insights_query`**, the user may ask to save the qu
 1. Confirm with the user: report **name**, optional **description**, optional **start_timing** / **end_timing** for default run windows. Do **not** ask about `can_be_audience` — default it to `false` (omit the field, or pass `false`). Only set `true` if the user explicitly asks for audience eligibility.
 2. Reuse the **same** `vendor_id`, `product`, `project_id` (if any), `context_id`, `dimensions`, `metrics`, `filters`, `sort`, and `interval_suffix` as the last successful execute — **not** `date_preset`, `from`/`to`, or `limit` (those are execution-only).
 3. Call **`create_mdp_ai_report_from_insights`**.
-4. Return `report_id`, `name`, `creation_source: 'MCP'`, and **`portal_url`**. Always share the **`portal_url`** link with the user so they can open the report in the portal.
+4. In the chat response, show only **Report ID** (`report_id`) and **Report URL** (`portal_url` as a clickable link). Do **not** display `creation_source` (or raw field names like `report_id` / `portal_url`). Optionally mention the report name in the opening line.
 
 Do not call save before execute. Do not invent field ids — reuse ids from the prior execute (via schema). Do not save without user confirmation.
 
@@ -159,7 +159,7 @@ After reports exist, use these tools (same vendor scope rules as Insights):
 1. User confirms they want to change an existing MCP report (and which `report_id`).
 2. Run **`execute_insights_query`** with the new fields and show results.
 3. Call **`update_mdp_ai_report_from_insights`** with the same field ids (no dates/limit) plus `report_id`.
-4. Return `report_id`, optional new `name`, `creation_source: 'MCP'`, and **`portal_url`**. Always share the **`portal_url`** link with the user.
+4. In the chat response, show only **Report ID** and **Report URL** (same rules as create). Do **not** display `creation_source`.
 
 Do not update AI_CHAT / Thinkr reports via this tool. Do not pass client SQL.
 
