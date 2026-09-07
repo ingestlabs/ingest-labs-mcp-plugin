@@ -23,7 +23,7 @@ Replace `VENDOR_ID` / `PROJECT_ID` with real ids from MCP or the user. Data is p
 
 1. Scope already given → skip `list_vendors` (or use it only to resolve a display name).
 2. `list_insights_contexts` `{ "vendor_id": "VENDOR_ID", "product": "idl" }`  
-   → choose context whose keywords/description match attribution / revenue / channel (prefer `mcp_attribution_touchpoints_trino`).
+   → choose context whose keywords/description match attribution / revenue / channel (prefer `mcp_attribution_touchpoints`).
 3. `get_insights_schema` `{ "vendor_id": "VENDOR_ID", "product": "idl", "context_id": "<chosen>" }`  
    → note dimension id for channel, metric id for revenue (+ default `aggregate_fn`).
 4. `execute_insights_query`:
@@ -157,3 +157,32 @@ Do **not** show `creation_source`. Query definition is read-only in the portal �
 2. `execute_insights_query` with the new filters; show results.
 3. User confirms update.
 4. `update_mdp_ai_report_from_insights` with same Insights fields + `report_id` (no dates/limit).
+
+## Example 8 — Cross-context enrich (txn list + Shopify order status)
+
+**User:** “List attributed transactions last 7 days with Shopify financial status for VENDOR_ID.”
+
+**Good:**
+
+1. `list_insights_contexts` → pick primary grain `mcp_mdp_attributed_transactions` (not journey).
+2. `get_insights_schema` `{ "context_id": "mcp_mdp_attributed_transactions", ... }`  
+   → read **`joinable_contexts`**; confirm `mcp_shopify_orders` is listed.
+3. `get_insights_schema` again with  
+   `"include_context_ids": ["mcp_shopify_orders"]`  
+   → take Shopify dimension ids (e.g. financial status) from the merged schema.
+4. `execute_insights_query` with primary + enrichments:
+
+```json
+{
+  "vendor_id": "VENDOR_ID",
+  "product": "idl",
+  "context_id": "mcp_mdp_attributed_transactions",
+  "enrichment_context_ids": ["mcp_shopify_orders"],
+  "dimensions": ["<mat_txn_dim_id>", "<shopify_financial_status_dim_id>"],
+  "metrics": [{ "id": "<mat_txn_transactions_or_revenue_metric_id>" }],
+  "date_preset": "last_7d",
+  "limit": 25
+}
+```
+
+**Bad:** Invent a join; use journey when mat_txn + enrichments suffice; pass enrichment fields without `enrichment_context_ids` / without them appearing in `joinable_contexts`.

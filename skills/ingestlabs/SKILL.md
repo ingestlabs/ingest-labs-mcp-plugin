@@ -55,40 +55,68 @@ product: idl | cdp | media_tags
 | `idl` / `cdp` | Vendor-scoped; `project_id` usually not required |
 | `media_tags` | **`project_id` required** |
 
-When picking a context after `list_insights_contexts`, prefer match on **keywords / description** over name alone:
+When picking a context after `list_insights_contexts`, prefer match on **keywords / description** over name alone.
+Use the **`context_id` returned by the tool** (do not invent ids). Common MCP catalog ids:
 
 | User topic | Product | Prefer context id / keywords |
 | --- | --- | --- |
-| Attribution, MTA, channel revenue, journeys, UTM credit | `idl` | `mcp_attribution_touchpoints_trino` (attribution, touchpoints, MTA) |
-| Meta / Facebook ads, ROAS, ad sets | `idl` | `mcp_facebook_ads_trino` |
-| Google Ads, Search, Shopping, PMax | `idl` | `mcp_google_ads_trino` |
-| GA4 daily property metrics (users, sessions) | `idl` | `mcp_ga4_metrics_daily_trino` |
-| GA4 source / medium / channel | `idl` | `mcp_ga4_traffic_source_trino` |
-| GA4 landing pages | `idl` | `mcp_ga4_landing_pages_trino` |
-| Site events, sessions, ATC, checkout (IL) | `idl` | `mcp_sessionized_events_trino` |
-| SaaS / product event metrics | `idl` | `mcp_events_saas_metrics_trino` |
-| Traffic quality, bots, invalid traffic (TQS) | `idl` | `mcp_ingest_id_v2_tqs_trino` |
+| Attribution, MTA, channel revenue, UTM credit (touchpoint grain) | `idl` | `mcp_attribution_touchpoints` |
+| Conversion / order list with first+last touch UTMs (txn grain) | `idl` | `mcp_mdp_attributed_transactions` |
+| One-shot touchpoint + Shopify/ads/session mega-merge (legacy) | `idl` | `mcp_mdp_attribution_journey` — prefer ATP/mat_txn + enrichments instead when possible |
+| Meta / Facebook ads, ROAS, ad sets | `idl` | `mcp_facebook_ads` |
+| Google Ads, Search, Shopping, PMax | `idl` | `mcp_google_ads` |
+| TikTok ads | `idl` | `mcp_tiktok_ads` |
+| Shopify orders / customers | `idl` | `mcp_shopify_orders` / `mcp_shopify_customers` |
+| GA4 daily property metrics (users, sessions) | `idl` | `mcp_ga4_metrics_daily` |
+| GA4 source / medium / channel | `idl` | `mcp_ga4_traffic_source` |
+| GA4 landing pages | `idl` | `mcp_ga4_landing_pages` |
+| Site events, sessions, ATC, checkout (IL) | `idl` | `mcp_sessionized_events` |
+| Item / SKU events | `idl` | `mcp_events_il_items` |
+| SaaS / product event metrics | `idl` | `mcp_events_saas_metrics` |
+| Traffic quality, bots, invalid traffic (TQS) | `idl` | `mcp_ingest_id_v2_tqs` |
 | Tag fire aggregates | `media_tags` | `mcp_il_trino_tag_records` |
-| Raw tag recorded events | `media_tags` | `mcp_il_tag_recorded_events_trino` |
+| Raw tag recorded events | `media_tags` | `mcp_il_tag_recorded_events` |
 
 **Ambiguity rules**
 
-- Ads without platform → ask Meta vs Google (or list both contexts and let the user choose).
+- Ads without platform → ask Meta vs Google vs TikTok (or list contexts and let the user choose).
 - “Sessions / traffic” → distinguish GA4 bridge contexts vs IL sessionized events vs tag fires.
 - “Revenue” by channel/journey → attribution context; do not treat ads **spend** as revenue.
 - Attribution rows fan out (N touchpoints per conversion); use weighted attribution metrics as schema documents, do not naive-sum raw touchpoint rows as orders.
+- Transaction list with FT/LT UTMs → `mcp_mdp_attributed_transactions`, not touchpoint grain.
+- Prefer **primary grain + curated enrichments** over `mcp_mdp_attribution_journey` when the question spans domains (see Cross-context joins). Journey still works for deep ads hierarchy in one shot until enrichment-intra walks are universal.
 - If two contexts still look equally valid → show both and ask; do not guess.
 
 ## Mandatory Insights workflow
 
 Always after scope is resolved, in this order:
 
-1. **`list_insights_contexts`** — pick `context_id` from name / description / keywords
-2. **`get_insights_schema`** — map NL fields to dimension/metric **ids**
-3. **`execute_insights_query`** — run with those ids
+1. **`list_insights_contexts`** — pick primary `context_id` (defines **row grain**) from name / description / keywords
+2. **`get_insights_schema`** — map NL fields to dimension/metric **ids**; read **`joinable_contexts`**
+3. If the question needs columns from another domain listed in `joinable_contexts`: call **`get_insights_schema` again** with `include_context_ids` (max 3) to merge those dims/metrics
+4. **`execute_insights_query`** — primary `context_id` + optional **`enrichment_context_ids`** (same ids as include) + field ids from the merged schema
 
-Do not invent dimension or metric ids. Do not skip schema when unsure.
+Do not invent dimension or metric ids. Do not invent join keys or enrichment contexts. Do not skip schema when unsure.
 You may reuse a `context_id` and field ids already loaded in this session when the topic is unchanged; re-list when the domain changes.
+
+## Cross-context joins (curated)
+
+Some primaries allow **left-join enrichments** from an allowlisted registry (not free joins).
+
+| Concept | Meaning |
+| --- | --- |
+| Primary `context_id` | Owns row grain and date window |
+| `joinable_contexts` | From `get_insights_schema` — which contexts may be enriched, with `join_summary` / `edge_id` |
+| `include_context_ids` | Schema-only: merge enrichment dims/metrics into the schema response (max 3) |
+| `enrichment_context_ids` | Execute/report: actually left-join those contexts (must appear in `joinable_contexts`) |
+
+**Rules**
+
+- Only enrich contexts returned in `joinable_contexts` for that primary. Never invent edges.
+- Date filters apply to the **primary** only; enrichments are left joins (nulls when unmatched).
+- Typical compositions: `mcp_mdp_attributed_transactions` or `mcp_attribution_touchpoints` + `mcp_shopify_orders` (+ customers via SO→SC), sessionized, item events, or ads **campaign** contexts.
+- Deeper ads hierarchy (adset/ad) after campaign enrichment may still require the ads context alone or journey until the planner walks enrichment intra-relationships.
+- When saving an MDP AI report after an enriched execute, pass the same **`enrichment_context_ids`** (and field ids) as the execute — not dates/limit.
 
 ## Execute rules
 
@@ -114,7 +142,7 @@ After a successful **`execute_insights_query`**, the user may ask to save the qu
 ### Save workflow
 
 1. Confirm with the user: report **name**, optional **description**, optional **start_timing** / **end_timing** for default run windows. Do **not** ask about `can_be_audience` — default it to `false` (omit the field, or pass `false`). Only set `true` if the user explicitly asks for audience eligibility.
-2. Reuse the **same** `vendor_id`, `product`, `project_id` (if any), `context_id`, `dimensions`, `metrics`, `filters`, `sort`, and `interval_suffix` as the last successful execute — **not** `date_preset`, `from`/`to`, or `limit` (those are execution-only).
+2. Reuse the **same** `vendor_id`, `product`, `project_id` (if any), `context_id`, `enrichment_context_ids` (if any), `dimensions`, `metrics`, `filters`, `sort`, and `interval_suffix` as the last successful execute — **not** `date_preset`, `from`/`to`, or `limit` (those are execution-only).
 3. Call **`create_mdp_ai_report_from_insights`**.
 4. In the chat response, show only **Report ID** (`report_id`) and **Report URL** (`portal_url` as a clickable link). Do **not** display `creation_source` (or raw field names like `report_id` / `portal_url`). Optionally mention the report name in the opening line.
 
