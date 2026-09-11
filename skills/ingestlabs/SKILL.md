@@ -92,7 +92,7 @@ Use the **`context_id` returned by the tool** (do not invent ids). Common MCP ca
 Always after scope is resolved, in this order:
 
 1. **`list_insights_contexts`** — pick primary `context_id` (defines **row grain**) from name / description / keywords
-2. **`get_insights_schema`** — map NL fields to dimension/metric **ids**; read **`joinable_contexts`**
+2. **`get_insights_schema`** — map NL fields to dimension/metric **ids**; read **`joinable_contexts`**. Classifications default to `{ id, mapping_count }`; pass **`include_classifications: true`** only when enum from→to mappings are needed.
 3. If the question needs columns from another domain listed in `joinable_contexts`: call **`get_insights_schema` again** with `include_context_ids` (max 3) to merge those dims/metrics
 4. **`execute_insights_query`** — primary `context_id` + optional **`enrichment_context_ids`** (same ids as include) + field ids from the merged schema
 
@@ -128,7 +128,7 @@ Some primaries allow **left-join enrichments** from an allowlisted registry (not
 - Obey each dimension's `is_mandatory` mode (`FILTER`, `SELECT`, or `FILTER_AND_SELECT`).
 - Filter only dimensions with `filterable: true` (metrics are not filterable in execute); operators are case-insensitive and `CONTAINS` aliases `CONTAINS_IN`.
 - `metrics[].aggregate_fn` is case-insensitive and optional for defaulted or `COMPUTED` metrics; ignore aggregate_fn on bare `COMPUTED` metrics.
-- Prefer a small `limit` for exploration (e.g. 10–25); max 100. Prefer metric-only queries when the user wants one number. If `truncated: true`, say so and offer a tighter filter or higher limit.
+- Prefer a small `limit` for exploration (e.g. 10–25); default 100, max 500. Prefer metric-only queries when the user wants one number. If `truncated: true`, say so and offer a tighter filter or higher limit.
 - Need at least one dimension or metric.
 
 ## Save as MDP AI Report
@@ -179,7 +179,7 @@ After reports exist, use these tools (same vendor scope rules as Insights):
 | --- | --- |
 | `list_mdp_ai_reports` | Discover reports. **Required** `scope`: `CUSTOM` or `PREBUILT`. For AI-saved reports prefer `scope=CUSTOM` + `creation_source=MCP`. Optional `search`, `offset`, `limit` (max 100). |
 | `get_mdp_ai_report` | Inspect metadata, `idl_query_request` (with context name/description), timings, column map. SQL omitted unless `include_sql: true` (debugging only). |
-| `execute_mdp_ai_report` | Run saved SQL for a date range. Same date rules as Insights: `date_preset` **or** both `from`+`to`. Default `limit` 25, max 100. Does not change the stored definition. |
+| `execute_mdp_ai_report` | Run saved SQL for a date range. Same date rules as Insights: `date_preset` **or** both `from`+`to`. Default `limit` 100, max 500. Does not change the stored definition. |
 | `update_mdp_ai_report_from_insights` | Recompile an **MCP** report’s query from a new Insights shape. Same confirm + prior successful `execute_insights_query` rules as create. Only `creation_source=MCP` reports. |
 
 ### Update workflow
